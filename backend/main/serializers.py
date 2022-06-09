@@ -15,7 +15,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model=Course
-        fields=("id","teacher","title","description","featured_img","keywords","course_chapters", "total_enrolled_students")
+        fields=("id","teacher","title","description","featured_img","keywords","course_chapters", "total_enrolled_students", "course_rating")
     def __init__(self, *arg, **kwargs):
         super(CourseSerializer, self).__init__(*arg, **kwargs)
         request = self.context.get('request')

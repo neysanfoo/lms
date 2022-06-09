@@ -118,3 +118,13 @@ class EnrolledStudentList(generics.ListCreateAPIView):
 class CourseRatingList(generics.ListCreateAPIView):
     queryset=models.CourseRating.objects.all()
     serializer_class=CourseRatingSerializer
+
+@csrf_exempt
+def fetch_rating_status(request, student_id, course_id):
+    student=models.Student.objects.filter(id=student_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    ratingStatus=models.CourseRating.objects.filter(course=course, student=student)
+    if ratingStatus:
+        return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})
