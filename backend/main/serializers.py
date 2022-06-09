@@ -5,18 +5,35 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model=Teacher
         fields=("id", "full_name","email","password","qualification","mobile_no","bio", "teacher_courses")
-        depth=1
+    def __init__(self, *arg, **kwargs):
+        super(TeacherSerializer, self).__init__(*arg, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 1
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model=Course
         fields=("id","teacher","title","description","featured_img","keywords","course_chapters", "total_enrolled_students")
-        depth=1
+    def __init__(self, *arg, **kwargs):
+        super(CourseSerializer, self).__init__(*arg, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 1
+
 
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model=Chapter
         fields=("id","course","title","description","video","remarks")
+    def __init__(self, *arg, **kwargs):
+        super(ChapterSerializer, self).__init__(*arg, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 1
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,7 +45,12 @@ class StudentCourseEnrollSerializer(serializers.ModelSerializer):
     class Meta:
         model=StudentCourseEnrollment
         fields=("id", "course","student",'enrolled_time')
-        depth=1
+    def __init__(self, *arg, **kwargs):
+        super(StudentCourseEnrollSerializer, self).__init__(*arg, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == "GET":
+            self.Meta.depth = 1
 
 class CourseRatingSerializer(serializers.ModelSerializer):
     class Meta:
