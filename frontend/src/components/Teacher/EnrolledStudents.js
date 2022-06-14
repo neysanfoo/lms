@@ -6,6 +6,7 @@ const baseURL="http://127.0.0.1:8000/api"
 
 function EnrolledStudents() {
   const [studentData, setStudentData] = useState([]);
+  const [courseTitle, setCourseTitle] = useState('');
 
   const {course_id} = useParams();
 
@@ -17,6 +18,13 @@ function EnrolledStudents() {
       })
     }
     catch(error){
+      console.log(error)
+    }
+    try {
+      axios.get(baseURL + '/course/' + course_id).then(response=>{
+        setCourseTitle(response.data.title)
+      })}
+      catch(error){
       console.log(error)
     }
   }, []);
@@ -31,24 +39,22 @@ function EnrolledStudents() {
           </aside>
           <section className="col-md-9">
             <div className="card">
-              <h5 className="card-header">My Students</h5>
+              <h5 className="card-header">Students Enrolled in {courseTitle}</h5>
                 <div className="card-body">
                   <table className="table table-bordered">
                     <thead>
                       <tr>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>Action</th>
+                        <th>Interests</th>
                       </tr>
                     </thead>
                     <tbody>
                       {studentData.map((row,index)=>
                       <tr>
-                        <td><Link to={"/view-student/" + row.student.id}>{row.student.username}</Link></td>
+                        <td>{row.student.username}</td>
                         <td>{row.student.email}</td>
-                        <td>
-                          <Link className='btn btn-info btn-sm me-2' to={ "/"}>View</Link>
-                        </td>
+                        <td>{row.student.interests}</td>
                       </tr>
                       )}
                     </tbody>
