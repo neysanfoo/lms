@@ -17,7 +17,8 @@ function Register() {
     'qualification': '',
     'mobile_no': '',
     'bio': '',
-    'status': ''
+    'status': '',
+    'profile_pic': ''
   })
 
   function handleChange(event){
@@ -35,24 +36,26 @@ function Register() {
     teacherFormData.append("qualification", teacherData.qualification)
     teacherFormData.append("mobile_no", teacherData.mobile_no)
     teacherFormData.append("bio", teacherData.bio)
+    teacherFormData.append('profile_pic', teacherData.profile_pic, teacherData.profile_pic.name);
     try {
-      axios.post(baseURL, teacherFormData).then((response)=>{
+      axios.post(baseURL, teacherFormData, {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then((response)=>{
         window.location.href='/teacher-login'
-        setTeacherData({
-          'full_name': '',
-          'email': '',
-          'password': '',
-          'qualification': '',
-          'mobile_no': '',
-          'bio': '',
-          'status': 'success'
-        });
       });
     }
     catch(error){
       console.log(error)
-      setTeacherData({'status': 'error'})
     }
+    }
+    function handleFileChange(event){
+      setTeacherData({
+        ...teacherData,
+        [event.target.name]: event.target.files[0]
+  
+      })
     }
 
     const teacherLoginStatus=localStorage.getItem('teacherLoginStatus')
@@ -91,6 +94,13 @@ function Register() {
               <span className="details">Biography</span>
               <textarea onChange={handleChange} value={teacherData.bio} name="bio" placeholder="Write a short biography (~ 100 words) about yourself." required></textarea>
             </div>
+          </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Featured Image</label>
+            <input name="profile_pic" onChange={handleFileChange} class="form-control" type="file" id="formFile" />
+            {teacherData.profile_pic &&
+              <img src={teacherData.profile_pic} width="300" />
+            }
           </div>
           <button onClick={handleSubmit} type="button" className="register--button">Register</button>
         </form>

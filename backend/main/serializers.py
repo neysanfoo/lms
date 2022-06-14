@@ -4,7 +4,7 @@ from .models import Teacher, Course, Chapter, Student, StudentCourseEnrollment, 
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model=Teacher
-        fields=("id", "full_name","email","password","qualification","mobile_no","bio", "teacher_courses")
+        fields=("id", "full_name","email","password","qualification","mobile_no","bio", "teacher_courses", "profile_pic")
     def __init__(self, *arg, **kwargs):
         super(TeacherSerializer, self).__init__(*arg, **kwargs)
         request = self.context.get('request')
