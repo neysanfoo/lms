@@ -19,6 +19,7 @@ function Home() {
       console.log(error)
     }
   }, []);
+  console.log(courseData)
 
   const cards = courseData.map(item => {
         return (

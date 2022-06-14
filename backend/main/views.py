@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .serializers import TeacherSerializer, CourseSerializer, ChapterSerializer, StudentSerializer,StudentCourseEnrollSerializer, CourseRatingSerializer
+from .serializers import TeacherSerializer, CourseSerializer, ChapterSerializer, StudentSerializer,StudentCourseEnrollSerializer, CourseRatingSerializer, TeacherDashboardSerializer
 from . import models
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +12,10 @@ class TeacherList(generics.ListCreateAPIView):
     serializer_class=TeacherSerializer
     # permission_classes=[permissions.IsAuthenticated]
 
+class TeacherDashboard(generics.RetrieveAPIView):
+    queryset=models.Teacher.objects.all()
+    serializer_class=TeacherDashboardSerializer
+    # permission_classes=[permissions.IsAuthenticated]
 
 class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Teacher.objects.all()
@@ -32,7 +36,7 @@ def teacher_login(request):
         return JsonResponse({'bool':False})
 
 class CourseList(generics.ListCreateAPIView):
-    queryset=models.Course.objects.all()
+    queryset=models.Course.objects.all().order_by('-id')
     serializer_class=CourseSerializer
 
     def get_queryset(self):
@@ -130,6 +134,19 @@ def fetch_rating_status(request, student_id, course_id):
     course=models.Course.objects.filter(id=course_id).first()
     ratingStatus=models.CourseRating.objects.filter(course=course, student=student)
     if ratingStatus:
+        return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})
+
+@csrf_exempt
+def teacher_change_password(request, teacher_id):
+    password=request.POST['password']
+    try:
+        teacherData=models.Teacher.objects.get(id=teacher_id)
+    except:
+        teacherData=None
+    if teacherData:
+        models.Teacher.objects.filter(id=teacher_id).update(password=password)
         return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})
