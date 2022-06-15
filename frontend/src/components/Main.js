@@ -43,8 +43,8 @@ function Main() {
     <div>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/all-courses" element={<AllCourses />} />
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<AllCourses />} />
         <Route path="/course-chapters/:course_id" element={<CourseChapters />} />
         <Route path="/edit-chapter/:chapter_id" element={<EditChapter />} />
         <Route path="/popular-courses" element={<PopularCourses />} />

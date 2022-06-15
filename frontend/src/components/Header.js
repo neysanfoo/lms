@@ -64,12 +64,12 @@ function Header() {
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
         <Link className="navbar-brand" to="/">LMS</Link>
-        <div className="search">
+        {/* <div className="search">
             <input onChange={handleChange} value={searchData.search} type="text" className="search-input" placeholder="Search" name="search" />
             <div onClick={handleSearch} className="search-icon">
               <i class="bi bi-search"></i>
             </div>
-        </div>
+        </div> */}
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>

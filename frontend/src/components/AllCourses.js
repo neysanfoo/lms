@@ -26,12 +26,30 @@ function AllCourses() {
             />
         )
     })
+  
+    const [searchTerm, setSearchTerm] = useState('');
+
 
   return (
     <div className="container mt-4">
-      <h3 className="pb-1 mb-4">Latest Courses</h3>
-        <div className="row">
-      {cards}
+      <h3 className="pb-1 mb-4">Course Library</h3>
+      <div>
+        <input className='search--bar--filter' type="text" value={searchTerm} placeholder='Search' onChange={event => {setSearchTerm(event.target.value)}} />
+      </div>
+      <div className="row">
+      {
+        courseData.filter((item) =>
+          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.teacher.full_name.toLowerCase().includes(searchTerm.toLowerCase())).map(item => {
+          return (
+              <CourseCard
+                  key={item.id}
+                  item={item}
+              />
+          )
+        })
+      }
       </div>
       {/* Pagination */}
       <nav aria-label="Page navigation example mt-4">
