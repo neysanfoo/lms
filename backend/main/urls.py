@@ -10,6 +10,7 @@ urlpatterns = [
     path('teacher-login/', views.teacher_login),
     # Course
     path('course/', views.CourseList.as_view()),
+    path('search-courses/<str:search_data>', views.CourseList.as_view()),
     # Course detail
     path('course/<int:pk>', views.CourseDetailView.as_view()),
     # Specific Course Chapter
@@ -28,6 +29,7 @@ urlpatterns = [
     path('student-enroll-status/<int:student_id>/<int:course_id>', views.student_enroll_status),
     path('fetch-all-enrolled-students/<int:teacher_id>', views.EnrolledStudentList.as_view()),
     path('fetch-enrolled-students/<int:course_id>', views.EnrolledStudentList.as_view()),
+    path('fetch-enrolled-courses/<int:student_id>', views.EnrolledStudentList.as_view()),
     path('course-rating/', views.CourseRatingList.as_view()),
     path('fetch-rating-status/<int:student_id>/<int:course_id>', views.fetch_rating_status),
 ]

@@ -9,8 +9,6 @@ import Register from './User/Register'
 import CourseDetail from "./CourseDetail"
 import Dashboard from './User/Dashboard'
 import MyCourses from "./User/MyCourses"
-import FavouriteCourses from "./User/FavouriteCourses"
-import RecommendedCourses from "./User/RecommendedCourses"
 import ProfileSetting from "./User/ProfileSetting"
 import ChangePassword from "./User/ChangePassword"
 
@@ -32,6 +30,7 @@ import TeacherEnrolledStudents from './Teacher/EnrolledStudents'
 import AllCourses from "./AllCourses"
 import PopularCourses from "./PopularCourses"
 import FeaturedTeachers from "./FeaturedTeachers"
+import SearchCourses from './Search'
 
 import CourseChapters from "./Teacher/CourseChapters"
 import EditChapter from "./Teacher/EditChapter"
@@ -51,14 +50,13 @@ function Main() {
         <Route path="/popular-courses" element={<PopularCourses />} />
         <Route path="/featured-teachers" element={<FeaturedTeachers />} />
         <Route path="/detail/:course_id" element={<CourseDetail />} />
+        <Route path="/search/:search_data" element={<SearchCourses />} />
 
         <Route path="/student-login" element={<Login />} />
         <Route path="/student-logout" element={<Logout />} />
         <Route path="/student-register" element={<Register />} />
         <Route path="/student-dashboard" element={<Dashboard />} />
         <Route path="/my-courses" element={<MyCourses />} />
-        <Route path="/favourite-courses" element={<FavouriteCourses />} />
-        <Route path="/recommended-courses" element={<RecommendedCourses />} />
         <Route path="/profile-setting" element={<ProfileSetting />} />
         <Route path="/change-password" element={<ChangePassword />} />
 

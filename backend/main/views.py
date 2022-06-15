@@ -6,6 +6,10 @@ from .serializers import TeacherSerializer, CourseSerializer, ChapterSerializer,
 from . import models
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from django.db.models import Avg
+
+
 
 class TeacherList(generics.ListCreateAPIView):
     queryset=models.Teacher.objects.all()
@@ -44,7 +48,13 @@ class CourseList(generics.ListCreateAPIView):
         if 'result' in self.request.GET:
             limit=int(self.request.GET['result'])
             qs=models.Course.objects.all().order_by('-id')[:limit]
+        if 'search_data' in self.kwargs:
+            print("HELLO")
+            search=self.kwargs['search_data']
+            qs=models.Course.objects.filter(Q(title__icontains=search)|Q(description__icontains=search)|Q(keywords__icontains=search)|Q(teacher__full_name__icontains=search))
         return qs
+
+        
 
 # Specific Teacher Course
 class TeacherCourseList(generics.ListCreateAPIView):
@@ -123,6 +133,10 @@ class EnrolledStudentList(generics.ListCreateAPIView):
             teacher_id = self.kwargs['teacher_id']
             teacher = models.Teacher.objects.get(pk=teacher_id)
             return models.StudentCourseEnrollment.objects.filter(course__teacher=teacher).distinct()
+        elif 'student_id' in self.kwargs:
+            student_id = self.kwargs['student_id']
+            student = models.Student.objects.get(pk=student_id)
+            return models.StudentCourseEnrollment.objects.filter(student=student)
 
 class CourseRatingList(generics.ListCreateAPIView):
     queryset=models.CourseRating.objects.all()

@@ -1,6 +1,24 @@
-import {Link} from 'react-router-dom'
+import {Link,useParams} from 'react-router-dom'
 import Sidebar from "./Sidebar"
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+const baseURL="http://127.0.0.1:8000/api"
+
+
 function MyCourses() {
+  const [courseData, setCourseData] = useState([]);
+  const studentId=localStorage.getItem('studentId')
+  // Fetch student on page load
+  useEffect(()=>{
+    try{
+      axios.get(baseURL + '/fetch-enrolled-courses/' + studentId).then(response=>{
+        setCourseData(response.data)
+      })
+    } catch(error){
+      console.log(error)
+    }
+  }, []);
+  console.log(courseData)
   return (
     <div className="container mt-4">
       <div className="row">
@@ -15,16 +33,18 @@ function MyCourses() {
                     <thead>
                       <tr>
                         <th>Name</th>
-                        <th>Created By</th>
-                        <th>Action</th>
+                        <th>Instructor</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <td>React Course</td>
-                      <td><Link to="/">Neysan Foo</Link></td>
-                      <td>
-                        <button className="btn btn-danger btn-sm active">Delete</button>
-                      </td>
+                      {courseData.map((row,index)=>
+                      <tr>
+                        <td><Link to={'/detail/' + row.course.id}>{row.course.title}</Link></td>
+                        <td><Link to={'/teacher-detail/' + row.course.teacher.id}>{row.course.teacher.full_name}</Link></td>
+                        <td>TODO: Ongoing/Completed</td>
+                      </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -32,7 +52,6 @@ function MyCourses() {
           </section>
       </div>
     </div>
-
 
     )
 }
