@@ -32,16 +32,16 @@ function AllCourses() {
 
   return (
     <div className="container mt-4">
-      <h3 className="pb-1 mb-4">Course Library</h3>
+      <h3 className="banner">Course Library</h3>
       <div>
         <input className='search--bar--filter' type="text" value={searchTerm} placeholder='Search' onChange={event => {setSearchTerm(event.target.value)}} />
       </div>
       <div className="row">
       {
         courseData.filter((item) =>
-          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.teacher.full_name.toLowerCase().includes(searchTerm.toLowerCase())).map(item => {
+          item.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+          item.description.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+          item.teacher.full_name.toLowerCase().includes(searchTerm.trim().toLowerCase())).map(item => {
           return (
               <CourseCard
                   key={item.id}
