@@ -50,7 +50,8 @@ function MyCourses() {
                         <td><Link to={"/teacher-enrolled-students/" + course.id}>{course.total_enrolled_students}</Link></td>
                         <td>{course.course_rating ? `${course.course_rating}/5` : "No ratings yet"}</td>
                         <td>
-                          <Link className='btn btn-info btn-sm me-2' to={ "/teacher-edit-course/" + course.id }>Edit</Link>
+                          <Link className='btn btn-info btn-sm me-2' to={ "/teacher-create-course/" + course.id }>Course Content</Link>
+                          {/* <Link className='btn btn-info btn-sm me-2' to={ "/teacher-edit-course/" + course.id }>Course Content</Link> */}
                           <Link className='btn btn-success btn-sm me-2' to={ "/teacher-add-chapter/" + course.id }>Add Chapter</Link>
                           <button className="btn btn-danger btn-sm">Delete</button>
                         </td>

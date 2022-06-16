@@ -26,6 +26,7 @@ import TeacherMyUsers from "./Teacher/MyUsers"
 import TeacherProfileSetting from './Teacher/ProfileSetting'
 import TeacherChangePassword from './Teacher/ChangePassword'
 import TeacherEnrolledStudents from './Teacher/EnrolledStudents'
+import TeacherCreateCourse from './Teacher/CreateCourse'
 
 import AllCourses from "./AllCourses"
 import PopularCourses from "./PopularCourses"
@@ -66,6 +67,7 @@ function Main() {
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
         <Route path="/teacher-my-courses" element={<TeacherMyCourses />} />
         <Route path="/teacher-add-course" element={<TeacherAddCourse />} />
+        <Route path="/teacher-create-course/:course_id" element={<TeacherCreateCourse />} />
         <Route path="/teacher-edit-course/:course_id" element={<TeacherEditCourse />} />
         <Route path="/teacher-add-chapter/:course_id" element={<TeacherAddChapter />} />
         <Route path="/teacher-my-users" element={<TeacherMyUsers />} />
