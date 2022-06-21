@@ -13,9 +13,8 @@
 .course--card {
 	 display: flex;
 	 flex-direction: column;
-	 max-width: 18em;
-	 min-height: 18em;
-   max-height: 20em;
+	 width: 18.5em;
+	 height: 20em;
 	 overflow: hidden;
    border: 2px solid black;
 	 text-decoration: none;
@@ -334,52 +333,6 @@ form .input-box span.details{
  charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='slategray' stroke='slategray' stroke-width='38' d='M259.216 29.942L330.27 173.92l158.89 23.087L374.185 309.08l27.145 158.23-142.114-74.698-142.112 74.698 27.146-158.23L29.274 197.007l158.89-23.088z' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-
-/* Search Bar */
-
-  .search{
-      background-color: #D9D9D9;
-  }
-  
-  .search-input{
-      color: white;
-      border:0;
-      outline: 0;
-      background: none;
-      width: 0;
-      caret-color:transparent;
-      line-height: 40px;
-  
-  }
-  
-  .search .search-input{
-      padding: 0 10px;
-      width: 200px;
-      caret-color: #536bf6;
-      font-size: 21px;
-      font-weight: 300;
-      color: black;
-  }
-  
-  .search:hover>.search-icon{
-      background:#1A237E;
-      color:#fff;
-  }
-  .search-icon{
-      height: 40px;
-      width: 40px;
-      outline: 2px solid white;
-      float: right;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-color: #536bf6;
-  
-  }
-  a:link{
-      text-decoration: none;
-  }
   
 .search--and--sort{
   display: flex;
