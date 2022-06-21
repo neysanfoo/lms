@@ -4,10 +4,23 @@ from django.db import models
 class Teacher(models.Model):
     full_name=models.CharField(max_length=100)
     email=models.CharField(max_length=100)
-    password=models.CharField(max_length=100)
+    password=models.CharField(max_length=100, blank=True, null=True)
     qualification=models.CharField(max_length=200)
     mobile_no=models.CharField(max_length=20)
     bio=models.TextField()
+    profile_pic=models.ImageField(upload_to='teacher_profile_images/', null=True)
+
+    def total_teacher_courses(self):
+        total_courses = Course.objects.filter(teacher=self).count()
+        return total_courses
+
+    def total_teacher_chapters(self):
+        total_chapters = Chapter.objects.filter(course__teacher=self).count()
+        return total_chapters
+    
+    def total_teacher_students(self):
+        total_students = StudentCourseEnrollment.objects.filter(course__teacher=self).count()
+        return total_students
 
 
 # Course model
@@ -17,10 +30,15 @@ class Course(models.Model):
     description=models.TextField()
     featured_img=models.ImageField(upload_to='course_images/', null=True)
     keywords=models.TextField(null=True)
+    course_views = models.BigIntegerField(default=0)
 
     def total_enrolled_students(self):
         student_count = StudentCourseEnrollment.objects.filter(course=self).count()
         return student_count
+    
+    def course_rating(self):
+        course_rating = CourseRating.objects.filter(course=self).aggregate(avg_rating=models.Avg('rating'))
+        return course_rating['avg_rating']
         
     def __str__(self):
         return self.title
@@ -52,6 +70,12 @@ class Chapter(models.Model):
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         if frame_count:
             duration = frame_count / fps
+            print('fps = ' + str(fps))
+            print('number of frames = ' + str(frame_count))
+            print('duration = ' + str(duration))
+            minutes = int(duration / 60)
+            seconds = int(duration % 60)
+            print('duration (M:S) = ' + str(minutes) + ':' + str(seconds))
         return seconds
 
 # Student Course Enrollment

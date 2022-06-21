@@ -12,14 +12,24 @@ function CourseDetail(){
   const [teacherData, setTeacherData] = useState([]);
   const {course_id}=useParams()
   const [enrollStatus, setEnrollStatus]=useState();
+  const [ratingStatus, setRatingStatus]=useState();
+  const [rating, setRating]=useState(0);
+  const [ratingFilled, setRatingFilled]=useState('');
+  const [courseViews, setCourseViews] = useState(0);
+
   const studentId=localStorage.getItem('studentId')
   useEffect(()=>{
     // Fetch course details
     try{
       axios.get(baseURL + '/course/' + course_id).then(response=>{
+        console.log(response.data.course_rating)
         setCourseData(response.data)
         setTeacherData(response.data.teacher)
         setChapterData(response.data.course_chapters)
+        if (response.data.course_rating >= 1)
+        {
+          setRating(response.data.course_rating)
+        }
       })
     }
     catch(error){
@@ -36,6 +46,27 @@ function CourseDetail(){
       console.log(error)
     }
 
+    //Fetch rating status
+    try{
+      axios.get(baseURL + '/fetch-rating-status/' + studentId + '/' + course_id).then(response=>{
+        if (response.data.bool)
+          setRatingStatus("true")
+      })
+    }
+    catch(error){
+      console.log(error)
+    }
+
+    // Fetch view count 
+    try{
+      axios.get(baseURL + '/fetch-view-count/' + course_id).then(res=>{
+        console.log(res.data.views)
+        setCourseViews(res.data.views)
+      });
+    } catch(error){
+      console.log(error)
+    }
+
   }, []);
   // console.log(courseData)
   // console.log(teacherData)
@@ -44,7 +75,6 @@ function CourseDetail(){
   const studentLoginStatus=localStorage.getItem("studentLoginStatus")
 
   function EnrollStudent(){
-
     const EnrollFormData = new FormData();
     EnrollFormData.append('course', course_id);
     EnrollFormData.append('student', studentId);
@@ -60,10 +90,7 @@ function CourseDetail(){
     catch(error){
       console.log(error)
     }
-  }
-
-  const [rating, setRating] = useState(0);
-  
+  }  
 
     const [reviewData, setReviewData]=useState({
       'rating':'',
@@ -78,21 +105,28 @@ function CourseDetail(){
     }
 
     function handleSubmit(){
-      const RatingformData = new FormData();
-      RatingformData.append('rating', reviewData.rating);
-      RatingformData.append('review', reviewData.review);
-      RatingformData.append('course', course_id);
-      RatingformData.append('student', studentId);
-      
-      try {
-        axios.post(baseURL + '/course-rating/', RatingformData,)
-        .then((response)=>{
-          window.location.href='/detail/'+course_id
-        });
-        }
-      catch(error){
-        console.log(error)
+      if (reviewData.rating === '')
+      {
+        setRatingFilled('Please give a rating.')
       }
+      else{
+        const RatingformData = new FormData();
+        RatingformData.append('rating', reviewData.rating);
+        RatingformData.append('review', reviewData.review);
+        RatingformData.append('course', course_id);
+        RatingformData.append('student', studentId);
+        
+        try {
+          axios.post(baseURL + '/course-rating/', RatingformData,)
+          .then((response)=>{
+            window.location.href='/detail/'+course_id
+          });
+          }
+        catch(error){
+          console.log(error)
+        }
+      }
+      
     }
 
 
@@ -108,17 +142,23 @@ function CourseDetail(){
         </div>
         <div className="col-8">
           <h3>{courseData.title}</h3>
+          <b>Description</b>
           <p>{courseData.description}</p>
           <p><b>Course By: </b> <Link to={`/teacher-detail/${teacherData.id}`}>{teacherData.full_name}</Link></p>
           <p><b>Duration: </b> 3 Hours 30 Mins</p>
           <p><b>Total Enrolled: </b> {courseData.total_enrolled_students}</p>
           <p>
-          <b>Rating: </b>4/5
+          <b>Rating: </b>{rating.toFixed(1)}/5.0
           {
-            studentLoginStatus && enrollStatus=="true" &&
+            studentLoginStatus && enrollStatus=="true" && 
             <>
-              <button type="button" className="btn-sm btn-success  ms-4" data-bs-toggle="modal" data-bs-target="#reviewModal">Give a review</button>
-              <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+              {ratingStatus!="true" &&
+                <button type="button" className="btn-sm btn-success  ms-4" data-bs-toggle="modal" data-bs-target="#reviewModal">Give a review</button>
+              }
+              {ratingStatus==="true" &&
+                <small className="ms-2 badge text-muted">Thank you for your review</small>
+              }
+              <div class="modal fade" id="reviewModal" tabIndex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -130,6 +170,7 @@ function CourseDetail(){
                       <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Rating</label>
                         <RatingSystem handleChange={handleChange} />
+                        <p className='text-muted'>{ratingFilled}</p>
                         <label  for="InputReview" class="form-label">Review</label>
                         <textarea onChange={handleChange} name="review" value={reviewData.review} type="text" class="form-control" id="InputReview" rows="5"></textarea>
                       </div>
@@ -138,6 +179,7 @@ function CourseDetail(){
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       <button onClick={handleSubmit} type="button" class="btn btn-primary">Submit</button>
+                      
                     </div>
                   </div>
                 </div>
@@ -147,6 +189,7 @@ function CourseDetail(){
             
           }
           </p>
+          <p><b>Views: </b> {courseViews}</p>
           {
             studentLoginStatus && enrollStatus!="true" &&
             <p><button type="button" onClick={EnrollStudent} className="btn btn-success">Enroll</button></p>
@@ -176,7 +219,7 @@ function CourseDetail(){
               <button className="btn btn-sm" data-bs-toggle="modal" data-bs-target="#videoModal1"><i className="bi bi-play-btn"></i></button>
             </span>
             {/* Video Modal Start */}
-            <div className="modal fade" id="videoModal1" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+            <div className="modal fade" id="videoModal1" tabIndex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
               <div className="modal-dialog modal-xl">
                 <div className="modal-content">
                   <div className="modal-header">

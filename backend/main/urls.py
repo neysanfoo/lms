@@ -4,10 +4,14 @@ from . import views
 urlpatterns = [
     # Teacher
     path('teacher/', views.TeacherList.as_view()),
+    path('teacher/dashboard/<int:pk>', views.TeacherDashboard.as_view()),
     path('teacher/<int:pk>/', views.TeacherDetail.as_view()),
+    path('teacher/change-password/<int:teacher_id>/', views.teacher_change_password),
     path('teacher-login/', views.teacher_login),
     # Course
     path('course/', views.CourseList.as_view()),
+    path('search-courses/<str:search_data>', views.CourseList.as_view()),
+    path("fetch-view-count/<int:course_id>", views.fetch_view_count),
     # Course detail
     path('course/<int:pk>', views.CourseDetailView.as_view()),
     # Specific Course Chapter
@@ -24,6 +28,9 @@ urlpatterns = [
     path('student-login/', views.student_login),
     path('student-enroll-course', views.StudentEnrolledCourseList.as_view()),
     path('student-enroll-status/<int:student_id>/<int:course_id>', views.student_enroll_status),
+    path('fetch-all-enrolled-students/<int:teacher_id>', views.EnrolledStudentList.as_view()),
     path('fetch-enrolled-students/<int:course_id>', views.EnrolledStudentList.as_view()),
+    path('fetch-enrolled-courses/<int:student_id>', views.EnrolledStudentList.as_view()),
     path('course-rating/', views.CourseRatingList.as_view()),
+    path('fetch-rating-status/<int:student_id>/<int:course_id>', views.fetch_rating_status),
 ]

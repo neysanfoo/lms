@@ -41,12 +41,7 @@ function AddCourse() {
           'content-type': 'multipart/form-data'
         }
       }).then((response)=>{
-        setCourseData({
-          'title':'',
-          'description': '',
-          'f_img': '',
-          'keywords': ''
-        });
+        window.location.href='/teacher-my-courses/'
       });
     }
     catch(error){

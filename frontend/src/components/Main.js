@@ -9,8 +9,6 @@ import Register from './User/Register'
 import CourseDetail from "./CourseDetail"
 import Dashboard from './User/Dashboard'
 import MyCourses from "./User/MyCourses"
-import FavouriteCourses from "./User/FavouriteCourses"
-import RecommendedCourses from "./User/RecommendedCourses"
 import ProfileSetting from "./User/ProfileSetting"
 import ChangePassword from "./User/ChangePassword"
 
@@ -28,10 +26,12 @@ import TeacherMyUsers from "./Teacher/MyUsers"
 import TeacherProfileSetting from './Teacher/ProfileSetting'
 import TeacherChangePassword from './Teacher/ChangePassword'
 import TeacherEnrolledStudents from './Teacher/EnrolledStudents'
+import TeacherCreateCourse from './Teacher/CreateCourse'
 
 import AllCourses from "./AllCourses"
 import PopularCourses from "./PopularCourses"
 import FeaturedTeachers from "./FeaturedTeachers"
+import SearchCourses from './Search'
 
 import CourseChapters from "./Teacher/CourseChapters"
 import EditChapter from "./Teacher/EditChapter"
@@ -44,21 +44,20 @@ function Main() {
     <div>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/all-courses" element={<AllCourses />} />
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<AllCourses />} />
         <Route path="/course-chapters/:course_id" element={<CourseChapters />} />
         <Route path="/edit-chapter/:chapter_id" element={<EditChapter />} />
         <Route path="/popular-courses" element={<PopularCourses />} />
         <Route path="/featured-teachers" element={<FeaturedTeachers />} />
         <Route path="/detail/:course_id" element={<CourseDetail />} />
+        <Route path="/search/:search_data" element={<SearchCourses />} />
 
         <Route path="/student-login" element={<Login />} />
         <Route path="/student-logout" element={<Logout />} />
         <Route path="/student-register" element={<Register />} />
         <Route path="/student-dashboard" element={<Dashboard />} />
         <Route path="/my-courses" element={<MyCourses />} />
-        <Route path="/favourite-courses" element={<FavouriteCourses />} />
-        <Route path="/recommended-courses" element={<RecommendedCourses />} />
         <Route path="/profile-setting" element={<ProfileSetting />} />
         <Route path="/change-password" element={<ChangePassword />} />
 
@@ -68,6 +67,7 @@ function Main() {
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
         <Route path="/teacher-my-courses" element={<TeacherMyCourses />} />
         <Route path="/teacher-add-course" element={<TeacherAddCourse />} />
+        <Route path="/teacher-create-course/:course_id" element={<TeacherCreateCourse />} />
         <Route path="/teacher-edit-course/:course_id" element={<TeacherEditCourse />} />
         <Route path="/teacher-add-chapter/:course_id" element={<TeacherAddChapter />} />
         <Route path="/teacher-my-users" element={<TeacherMyUsers />} />

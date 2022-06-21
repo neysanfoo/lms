@@ -2,16 +2,24 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
-from .serializers import TeacherSerializer, CourseSerializer, ChapterSerializer, StudentSerializer,StudentCourseEnrollSerializer, CourseRatingSerializer
+from .serializers import TeacherSerializer, CourseSerializer, ChapterSerializer, StudentSerializer,StudentCourseEnrollSerializer, CourseRatingSerializer, TeacherDashboardSerializer
 from . import models
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from django.db.models import Avg
+
+
 
 class TeacherList(generics.ListCreateAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherSerializer
     # permission_classes=[permissions.IsAuthenticated]
 
+class TeacherDashboard(generics.RetrieveAPIView):
+    queryset=models.Teacher.objects.all()
+    serializer_class=TeacherDashboardSerializer
+    # permission_classes=[permissions.IsAuthenticated]
 
 class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Teacher.objects.all()
@@ -32,7 +40,7 @@ def teacher_login(request):
         return JsonResponse({'bool':False})
 
 class CourseList(generics.ListCreateAPIView):
-    queryset=models.Course.objects.all()
+    queryset=models.Course.objects.all().order_by('-id')
     serializer_class=CourseSerializer
 
     def get_queryset(self):
@@ -40,7 +48,13 @@ class CourseList(generics.ListCreateAPIView):
         if 'result' in self.request.GET:
             limit=int(self.request.GET['result'])
             qs=models.Course.objects.all().order_by('-id')[:limit]
+        if 'search_data' in self.kwargs:
+            print("HELLO")
+            search=self.kwargs['search_data']
+            qs=models.Course.objects.filter(Q(title__icontains=search)|Q(description__icontains=search)|Q(keywords__icontains=search)|Q(teacher__full_name__icontains=search))
         return qs
+
+        
 
 # Specific Teacher Course
 class TeacherCourseList(generics.ListCreateAPIView):
@@ -111,10 +125,49 @@ class EnrolledStudentList(generics.ListCreateAPIView):
     serializer_class=StudentCourseEnrollSerializer
 
     def get_queryset(self):
-        course_id = self.kwargs['course_id']
-        course = models.Course.objects.get(pk=course_id)
-        return models.StudentCourseEnrollment.objects.filter(course=course)
+        if 'course_id' in self.kwargs:
+            course_id = self.kwargs['course_id']
+            course = models.Course.objects.get(pk=course_id)
+            return models.StudentCourseEnrollment.objects.filter(course=course)
+        elif 'teacher_id' in self.kwargs:
+            teacher_id = self.kwargs['teacher_id']
+            teacher = models.Teacher.objects.get(pk=teacher_id)
+            return models.StudentCourseEnrollment.objects.filter(course__teacher=teacher).distinct()
+        elif 'student_id' in self.kwargs:
+            student_id = self.kwargs['student_id']
+            student = models.Student.objects.get(pk=student_id)
+            return models.StudentCourseEnrollment.objects.filter(student=student)
 
 class CourseRatingList(generics.ListCreateAPIView):
     queryset=models.CourseRating.objects.all()
     serializer_class=CourseRatingSerializer
+
+@csrf_exempt
+def fetch_rating_status(request, student_id, course_id):
+    student=models.Student.objects.filter(id=student_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    ratingStatus=models.CourseRating.objects.filter(course=course, student=student)
+    if ratingStatus:
+        return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})
+
+@csrf_exempt
+def teacher_change_password(request, teacher_id):
+    password=request.POST['password']
+    try:
+        teacherData=models.Teacher.objects.get(id=teacher_id)
+    except:
+        teacherData=None
+    if teacherData:
+        models.Teacher.objects.filter(id=teacher_id).update(password=password)
+        return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})
+
+@csrf_exempt
+def fetch_view_count(request, course_id):
+    queryset=models.Course.objects.filter(pk=course_id).first()
+    queryset.course_views+=1
+    queryset.save()
+    return JsonResponse({'views': queryset.course_views})

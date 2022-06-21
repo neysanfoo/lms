@@ -7,7 +7,8 @@ const baseURL="http://127.0.0.1:8000/api"
 
 function Home() {
   const [courseData, setCourseData] = useState([]);
-  // Fetch courses when page load
+  const [popularCourses, setPopularCourses]=useState([]);
+  // Fetch 4 latest courses
   useEffect(()=>{
     document.title='LMS Home'
     try{
@@ -18,52 +19,39 @@ function Home() {
     catch(error){
       console.log(error)
     }
+
   }, []);
+
 
   const cards = courseData.map(item => {
         return (
             <CourseCard
-                key={item.id}
-                item={item}
+              key={item.id}
+              item={item}
             />
         )
     })
 
 
+
   return (
     <div className="container mt-4">
         {/* Latest Courses */}
-      <h3 className="pb-1 mb-4">Latest Courses <Link to="/all-courses" className="float-end">See All</Link></h3>
+      <h3 className="pb-1 mb-4">Latest Courses <Link to="/all-courses" className="float-end"><button type="button" class="btn btn-primary">See All</button></Link></h3>
       <div className="row">
         {cards}
       </div>
         {/* End Latest Courses */}
 
         {/* Poupular Courses */}
-      <h3 className="pb-1 mb-4 mt-4">Popular Courses <Link to="/popular-courses" className="float-end">See All</Link></h3>
+      <h3 className="pb-1 mb-4 mt-4">Popular Courses <Link to="/popular-courses" className="float-end"><button type="button" class="btn btn-primary">See All</button></Link></h3>
       <div className="row">
-
-        <div className="col-md-3">
-          <div className="card">
-            <a href="#"> <img src="python.png" className="card-img-top" alt="Course image" /></a>
-            <div className="card-body">
-              <h5 className="card-title"><a href="#">Course title</a></h5>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card">
-            <a href="#"> <img src="python.png" className="card-img-top" alt="Course image" /></a>
-            <div className="card-body">
-              <h5 className="card-title"><a href="#">Course title</a></h5>
-            </div>
-          </div>
-        </div>
+        {cards}
       </div>
         {/* End Poupular Courses */}
 
         {/* Featured Teachers */}
-      <h3 className="pb-1 mb-4 mt-4">Featured Teachers  <Link to="/featured-teachers" className="float-end">See All</Link></h3>
+      {/* <h3 className="pb-1 mb-4 mt-4">Featured Teachers  <Link to="/featured-teachers" className="float-end">See All</Link></h3>
       <div className="row">
         <div className="col-md-3">
           <div className="card">
@@ -89,7 +77,7 @@ function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
         {/* End Featured Teachers */}
 
         {/* Student Testimonials */}
