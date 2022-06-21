@@ -30,6 +30,7 @@ class Course(models.Model):
     description=models.TextField()
     featured_img=models.ImageField(upload_to='course_images/', null=True)
     keywords=models.TextField(null=True)
+    course_views = models.BigIntegerField(default=0)
 
     def total_enrolled_students(self):
         student_count = StudentCourseEnrollment.objects.filter(course=self).count()

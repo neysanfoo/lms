@@ -15,6 +15,7 @@ function CourseDetail(){
   const [ratingStatus, setRatingStatus]=useState();
   const [rating, setRating]=useState(0);
   const [ratingFilled, setRatingFilled]=useState('');
+  const [courseViews, setCourseViews] = useState(0);
 
   const studentId=localStorage.getItem('studentId')
   useEffect(()=>{
@@ -53,6 +54,16 @@ function CourseDetail(){
       })
     }
     catch(error){
+      console.log(error)
+    }
+
+    // Fetch view count 
+    try{
+      axios.get(baseURL + '/fetch-view-count/' + course_id).then(res=>{
+        console.log(res.data.views)
+        setCourseViews(res.data.views)
+      });
+    } catch(error){
       console.log(error)
     }
 
@@ -131,6 +142,7 @@ function CourseDetail(){
         </div>
         <div className="col-8">
           <h3>{courseData.title}</h3>
+          <b>Description</b>
           <p>{courseData.description}</p>
           <p><b>Course By: </b> <Link to={`/teacher-detail/${teacherData.id}`}>{teacherData.full_name}</Link></p>
           <p><b>Duration: </b> 3 Hours 30 Mins</p>
@@ -146,7 +158,7 @@ function CourseDetail(){
               {ratingStatus==="true" &&
                 <small className="ms-2 badge text-muted">Thank you for your review</small>
               }
-              <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+              <div class="modal fade" id="reviewModal" tabIndex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -177,6 +189,7 @@ function CourseDetail(){
             
           }
           </p>
+          <p><b>Views: </b> {courseViews}</p>
           {
             studentLoginStatus && enrollStatus!="true" &&
             <p><button type="button" onClick={EnrollStudent} className="btn btn-success">Enroll</button></p>
@@ -206,7 +219,7 @@ function CourseDetail(){
               <button className="btn btn-sm" data-bs-toggle="modal" data-bs-target="#videoModal1"><i className="bi bi-play-btn"></i></button>
             </span>
             {/* Video Modal Start */}
-            <div className="modal fade" id="videoModal1" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+            <div className="modal fade" id="videoModal1" tabIndex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
               <div className="modal-dialog modal-xl">
                 <div className="modal-content">
                   <div className="modal-header">

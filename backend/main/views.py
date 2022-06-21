@@ -164,3 +164,10 @@ def teacher_change_password(request, teacher_id):
         return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})
+
+@csrf_exempt
+def fetch_view_count(request, course_id):
+    queryset=models.Course.objects.filter(pk=course_id).first()
+    queryset.course_views+=1
+    queryset.save()
+    return JsonResponse({'views': queryset.course_views})

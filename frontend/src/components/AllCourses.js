@@ -17,39 +17,74 @@ function AllCourses() {
       console.log(error)
     }
   }, []);
-
-  const cards = courseData.map(item => {
-        return (
-            <CourseCard
-                key={item.id}
-                item={item}
-            />
-        )
-    })
   
     const [searchTerm, setSearchTerm] = useState('');
+    const [sort, setSort] = useState('popular');
 
+    function handleSort(event){
+      setSort(event.target.value);
+      // set color of selected sort option to red and unselected to black
+      if (event.target.value === 'popular' && event.target.style.color === 'white'){
+        document.getElementById('popular').style.backgroundColor = 'white';
+        document.getElementById('popular').style.color = 'black';
+      }
+      else if (event.target.value === 'popular'){
+        document.getElementById('popular').style.backgroundColor = '#B23850';
+        document.getElementById('popular').style.color = 'white';
+        document.getElementById('latest').style.backgroundColor = 'white';
+        document.getElementById('latest').style.color = 'black';
+      }
+      if (event.target.value === 'latest' && event.target.style.color === 'white'){
+        setSort("popular")
+        document.getElementById('latest').style.backgroundColor = 'white';
+        document.getElementById('latest').style.color = 'black';
+      }
+      else if (event.target.value === 'latest'){
+        document.getElementById('latest').style.backgroundColor = '#B23850';
+        document.getElementById('latest').style.color = 'white';
+        document.getElementById('popular').style.backgroundColor = 'white';
+        document.getElementById('popular').style.color = 'black';
+      }
+    }
+    console.log(courseData)
+    console.log(sort)
 
   return (
     <div className="container mt-4">
       <h3 className="banner">Course Library</h3>
-      <div>
+      <div className='search--and--sort'>
         <input className='search--bar--filter' type="text" value={searchTerm} placeholder='Search' onChange={event => {setSearchTerm(event.target.value)}} />
+        <span className='sort--filter'>
+          <button id="popular" value="popular" onClick={handleSort}>Popular</button>
+          <button id="latest" value="latest" onClick={handleSort}>Latest</button>
+        </span>
       </div>
-      <div className="row">
-      {
-        courseData.filter((item) =>
+      
+      <div className="row cards--container">
+      {sort === "popular" ? courseData.filter((item) =>
           item.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
           item.description.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-          item.teacher.full_name.toLowerCase().includes(searchTerm.trim().toLowerCase())).map(item => {
+          item.teacher.full_name.toLowerCase().includes(searchTerm.trim().toLowerCase()))
+          .sort((a, b) => b.course_views - a.course_views).map(item => {
           return (
-              <CourseCard
-                  key={item.id}
-                  item={item}
-              />
+            <CourseCard
+              key={item.id}
+              item={item}
+            />
           )
-        })
-      }
+        }) : courseData.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+        item.teacher.full_name.toLowerCase().includes(searchTerm.trim().toLowerCase()))
+        .sort((a, b) => b.id - a.id).map(item => {
+          return (
+            <CourseCard
+              key={item.id}
+              item={item}
+            />
+          )
+        }
+        )}
       </div>
       {/* Pagination */}
       <nav aria-label="Page navigation example mt-4">
